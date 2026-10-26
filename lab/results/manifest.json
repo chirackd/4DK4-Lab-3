@@ -1,0 +1,15 @@
+{
+  "seeds": [
+    400452897,
+    333333,
+    222222,
+    44444,
+    987654321
+  ],
+  "duration": 1000000.0,
+  "warmup": 100000.0,
+  "replications": 1525,
+  "refined_reservation_grid": true,
+  "initial_1390_replication_elapsed_seconds": 43.261847496032715,
+  "sensitivity_replications": 180
+}

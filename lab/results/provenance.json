@@ -1,0 +1,49 @@
+{
+  "specification": "coe4dk4_lab_3_2026.pdf, pp. 1\u20134",
+  "specification_sha256": "1bc268889aef07dcd4ba64ffe6610560c44f08d91e57b58d3f8cbd783e97e38b",
+  "repository": "chirackd/4DK4-Lab-3",
+  "baseline_commit": "7a13b2ea8914b521e73fd4bcba2ae0a7bb330b06",
+  "python": "3.12.14",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "libc": [
+    "glibc",
+    "2.41"
+  ],
+  "gcc": "gcc (Debian 14.2.0-19) 14.2.0",
+  "python_packages": {
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "matplotlib": "3.10.8",
+    "reportlab": "4.4.9"
+  },
+  "source_sha256": {
+    "simlib.c": "2c158182ab0c15e55cf0875238b65a594c7be47c630d8d3dcf1ebce130980d7f",
+    "simlib.h": "ce38f7138f212a0a77ad994f8cfed1e9e6a3690e51165ec1416560c8a6c04a9d",
+    "trace.h": "0ef03322d425adb07779abb02b73d3e580dac4c7d770c1a39b5385f78c33482f",
+    "lab/run_sensitivity.py": "85cb1dcdbc1f68f9cab8ea68b99c02b1db14534a78256fe13ec788edb409c8b4",
+    "lab/run_experiments.py": "9b9bec7536aa212d1809b271862f6cfa5c1de4e7c7ee8723c0db1c05010753fd",
+    "lab/test_simulator.py": "f83f20c0bccb7636bd194fb912bba42c329d2af59590ff356e489558c16ac003",
+    "lab/analyze.py": "c47415daf5aa1b3d6dfddfcf4d76eb0c091c3130cb38a8e9872dcc76aded0e36",
+    "lab/build_report.py": "c9c044bfd7e6bd1ef950d0dd6cbe014206fa3e575f713574c997651d3bcb23fe",
+    "lab/simulator.c": "d608b25b01201050189d5503ed29f0d0cf5df21dd0458370f82bf4751c6d81b7",
+    "lab/Makefile": "aac18d3bce67592902e0c0b0d42cf3b140cbc2938d3269a0e21f300f381051b3",
+    "lab/requirements.txt": "ddbfa7be46d2fc294bda1372d31ece0d6e64df1b55b5077580c82bf3d31bb39b"
+  },
+  "validation": {
+    "model_checks_passed": 19,
+    "final_executable_records_reproduced": 42,
+    "main_replications_conservation_checked": 1525,
+    "sensitivity_replications_conservation_checked": 180
+  },
+  "main_command": "python3 lab/run_experiments.py --time 1000000 --seeds 400452897 333333 222222 44444 987654321 --workers 4",
+  "sensitivity_command": "python3 lab/run_sensitivity.py",
+  "raw_sha256": {
+    "lab/results/sensitivity.csv": "9738a7db6af6de0be24f6e637b96550155b31b83d09af12b9835fbea906d772b",
+    "lab/results/fairness.csv": "7aff7789356b9c940fca484ec624ce512a77e67b1903a93f53228c5e615fa471",
+    "lab/results/summary.csv": "2f10c447f4a64d4b155d8b282867b73053e61a2870b6c5f334022dbe8dda8b0c",
+    "lab/results/stations.csv": "53a3a4c1bf1b27691518655513a8e7e202d5a9a5a65d8b0b1e875eb55190110a",
+    "lab/results/capacity.csv": "dacfe665de0bd9b3c39608a8f37e0e96fb20adca3feec23f611b9ba719a25c7a",
+    "lab/results/sensitivity_summary.csv": "a2d2c5f44aad9cdcab86b8f89a7bb11e73104b85ae8806dc402d1c6558463d9c",
+    "lab/results/runs.csv": "c80aa90110cad9282ed6292878c56068c712976378eb93512499af93718315fd"
+  }
+}
