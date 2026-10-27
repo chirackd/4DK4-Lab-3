@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Create reviewed summaries and export scientific plots (markers, no interpolation)."""
 import os
-os.environ.setdefault("MPLCONFIGDIR", "/tmp/lab3-matplotlib")
-os.environ.setdefault("XDG_CACHE_HOME", "/tmp/lab3-cache")
+import argparse
+import tempfile
+os.environ.setdefault("XDG_CACHE_HOME", os.path.join(tempfile.gettempdir(), "lab3-cache"))
+os.environ.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "lab3-matplotlib"))
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -39,10 +41,19 @@ def series(ax,g,x,y,label,c,marker='o'):
     ax.plot([],[],color=c,marker=marker,linestyle='none',label=label)
 
 def save(fig,name):
-    fig.tight_layout();fig.savefig(ROOT/f'figures/{name}.png');fig.savefig(ROOT/f'figures/{name}.pdf');plt.close(fig)
+    fig.tight_layout();fig.savefig(FIGURES/f'{name}.png');fig.savefig(FIGURES/f'{name}.pdf');plt.close(fig)
 
 def main():
-    raw=pd.read_csv(ROOT/'results/runs.csv');a=aggregate(raw);a.to_csv(ROOT/'results/summary.csv',index=False)
+    global RESULTS, FIGURES
+    p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--results-dir', type=Path, default=ROOT.parent/'output'/'results')
+    p.add_argument('--figures-dir', type=Path, default=ROOT.parent/'output'/'figures')
+    args=p.parse_args();RESULTS=args.results_dir;FIGURES=args.figures_dir
+    required=['runs.csv','stations.csv','sensitivity.csv']
+    missing=[name for name in required if not (RESULTS/name).is_file()]
+    if missing:p.error('Missing '+', '.join(missing)+'; run run_all.ps1 (or lab/run_all.py) first.')
+    FIGURES.mkdir(parents=True,exist_ok=True)
+    raw=pd.read_csv(RESULTS/'runs.csv');a=aggregate(raw);a.to_csv(RESULTS/'summary.csv',index=False)
     for y,x,name in [('delay','rate','fixed_delay_arrival'),('throughput','rate','fixed_throughput_arrival'),('delay','throughput','fixed_delay_throughput'),('throughput','load','fixed_throughput_load')]:
         fig,axes=plt.subplots(1,2,figsize=(11,4.1))
         for ax,n in zip(axes,[5,10]):
@@ -63,12 +74,12 @@ def main():
         series(ax,a[(a['mode']=='beb')&(a['stations']==n)&(a['persistent']==-1)],'throughput','delay','Binary exponential',COLORS[3],'D')
         ax.set(title=f'{n} stations',xlabel='Throughput S (packets / X)',ylabel='Mean completed-packet delay D / X',yscale='log');ax.legend(fontsize=10)
     save(fig,'beb_comparison')
-    station=pd.read_csv(ROOT/'results/stations.csv'); station=station[(station['mode']=='beb')&(station['persistent']==0)]
+    station=pd.read_csv(RESULTS/'stations.csv'); station=station[(station['mode']=='beb')&(station['persistent']==0)]
     sr=[]
     for key,g in station.groupby(['stations','rate','seed']):
         for typ,q in [('Persistent station 0',g[g['station_station']==0]),('Other stations',g[g['station_station']!=0])]:
             count=q['station_successes'].sum();sr.append(dict(zip(['stations','rate','seed'],key))|{'group':typ,'throughput':q['station_throughput'].mean(),'delay':(q['station_successes']*q['station_delay']).sum()/count,'backlog_growth':g['backlog_growth'].iloc[0]})
-    sr=pd.DataFrame(sr);sa=aggregate(sr,['stations','rate','group'],['throughput','delay']);sa.to_csv(ROOT/'results/fairness.csv',index=False)
+    sr=pd.DataFrame(sr);sa=aggregate(sr,['stations','rate','group'],['throughput','delay']);sa.to_csv(RESULTS/'fairness.csv',index=False)
     for y in ['delay','throughput']:
         fig,axes=plt.subplots(1,2,figsize=(11,4.1))
         for ax,n in zip(axes,[5,10]):
@@ -103,13 +114,13 @@ def main():
     for ratio in [1,2,5,10,20,50]:
         g=a[(a['mode']=='reservation')&np.isclose(a['xr'],1/ratio)]
         bal=g[g['balanced']];peak=g.loc[g['throughput'].idxmax()]
-        cap.append({'ratio':ratio,'poisson_benchmark':min(1,ratio/np.e),'observed_service_ceiling':peak['throughput'],'peak_at_rate':peak['rate'],'largest_flow_balanced_rate':bal['rate'].max(),'delay_at_balanced_edge':bal.sort_values('rate')['delay'].iloc[-1]})
-    cap=pd.DataFrame(cap);cap.to_csv(ROOT/'results/capacity.csv',index=False)
+        cap.append({'ratio':ratio,'poisson_benchmark':min(1,ratio/np.e),'observed_service_ceiling':peak['throughput'],'peak_at_rate':peak['rate'],'largest_flow_balanced_rate':bal['rate'].max(),'delay_at_balanced_edge':bal.sort_values('rate')['delay'].iloc[-1] if len(bal) else np.nan})
+    cap=pd.DataFrame(cap);cap.to_csv(RESULTS/'capacity.csv',index=False)
     fig,ax=plt.subplots(figsize=(9,4.3));t=cap['ratio']
     for i,(k,l) in enumerate([('observed_service_ceiling','Largest measured mean S'),('largest_flow_balanced_rate','Largest flow-balanced tested λ'),('poisson_benchmark','Poisson reservation benchmark min(1, X/(e Xr))')]):
         ax.scatter(t,cap[k],marker=MARKERS[i],color=COLORS[i],label=l,s=45)
     ax.axhline(1,c='#333333',ls='--',lw=1,label='Data channel upper bound');ax.set(xscale='log',xlabel='Mean data length / minislot length, X/Xr',ylabel='Packets / X',ylim=(0,1.08));ax.set_xticks(t,labels=[str(v) for v in t]);ax.legend(fontsize=10);save(fig,'reservation_capacity')
-    sens=pd.read_csv(ROOT/'results/sensitivity.csv');ss=aggregate(sens,KEY+['time']);ss.to_csv(ROOT/'results/sensitivity_summary.csv',index=False)
+    sens=pd.read_csv(RESULTS/'sensitivity.csv');ss=aggregate(sens,KEY+['time']);ss.to_csv(RESULTS/'sensitivity_summary.csv',index=False)
     fig,axes=plt.subplots(1,2,figsize=(11,4.1))
     for ax,mode in zip(axes,['beb','reservation']):
         q=ss[ss['mode']==mode]
@@ -120,5 +131,5 @@ def main():
     assert len(raw)==len(raw.drop_duplicates(KEY+['seed']))
     assert np.isfinite(raw[METRICS].to_numpy()).all()
     assert (raw['arrivals']-raw['successes']==raw['backlog_end']-raw['backlog_warm']).all()
-    print(f'Validated {len(raw)} main replications, {len(sens)} sensitivity replications; exported {len(list((ROOT/"figures").glob("*.png")))} figures')
+    print(f'Validated {len(raw)} main replications, {len(sens)} sensitivity replications; exported {len(list(FIGURES.glob("*.png")))} figures')
 if __name__=='__main__':main()

@@ -45,5 +45,39 @@
     "lab/results/capacity.csv": "dacfe665de0bd9b3c39608a8f37e0e96fb20adca3feec23f611b9ba719a25c7a",
     "lab/results/sensitivity_summary.csv": "a2d2c5f44aad9cdcab86b8f89a7bb11e73104b85ae8806dc402d1c6558463d9c",
     "lab/results/runs.csv": "c80aa90110cad9282ed6292878c56068c712976378eb93512499af93718315fd"
+  },
+  "source_sha256_scope": "Historical reference experiment sources from 26 October 2026; workflow_refactor records the later native entry points.",
+  "workflow_refactor": {
+    "date": "2026-10-27",
+    "reference_repository": "chirackd/COMPENG_4DK4_Lab_2",
+    "reference_commit": "0d8330cd779ded20859b10e619f573f8fb878314",
+    "simulation_source_unchanged": true,
+    "source_sha256": {
+      "lab/runtime.py": "bf77c0f7271aec0f74599fff3a7dfce39e365a72d8084201a9caa5472de9e684",
+      "lab/run_all.py": "ff3d32de08f5652e493f99447d0dd8c9929360f2f60fb6a935e5fd771c97edd8",
+      "lab/run_experiments.py": "fe37f9583687ec2c7206c44e6ada8f1c5ad7ef2c0b19dbaa0a3a7b4c98c4668a",
+      "lab/run_sensitivity.py": "712e07fb35790eb6d101e842c8bc455ab648c7b57c9e3e93a0ffcf06ca42ac0d",
+      "lab/analyze.py": "f332df35e41f4714ab0e8df2cde4328e67723a7571e8f0a14385b2dc4d397be8",
+      "lab/build_report.py": "14d543529deab568372e91a2d7584939d2745d55b8274bb239839d0ec82a2175",
+      "lab/test_simulator.py": "689add5d13d58fb0218c08b6e60581fb07e8ff09139a9195fc902795e7d43275",
+      "build.ps1": "936b705123f22b853e4b653bc6b1f0fc741d8db7e116336146926f22ae5afeab",
+      "setup.ps1": "fba9f17599556c26e8f62684311b4970f057d100c1b85bf2e537c945f8e35d66",
+      "run_exp4.ps1": "a96163c5b815271434c4b60c8e77b47525cbdce5849aa38d4d6d87f8519fbbf0",
+      "run_exp1.ps1": "443c198001643e7332ea24af98132b8b115d60cfbf13ac6e512a8b804b33be51",
+      "run_exp6.ps1": "a4f21854bf130907640586ec8ea208302cb37aa2257f0126efd8233ee0b6d7fb",
+      "run_exp3.ps1": "c677d60109a3a24a91e048d36deac832d302ef9da9614fc06b4d3b8ceba86d5f",
+      "run_exp5.ps1": "b5d8991a44d99fa17a626da934395434c4ec5a10e2557d4b9ffdda5b09088bfb",
+      "run_exp2.ps1": "54c33eacdc943c708159bac535bb5c7c68faa7e3f6e8e7c532c5f7c1c2ce32df",
+      "run_all.ps1": "9c4718ea2c218416ffb717c3bd13dd8393784d4bd2e7763ccf39338046c9e2f4",
+      "scripts/Run-Experiment.ps1": "b9bc212e6182658c92752e545f896515b85f56ac711bbe329d2c7b83d78fb0d0",
+      "scripts/Common.ps1": "6ebd046bbe8a3a0c28f03b9d68e20072a295fb0ee5ac9e438bbb71133a5b8b64",
+      "exp2/run_exp2.ps1": "96cd5cd11413057375502c8ba564357f72b331416375d0f6feeaf7585e45fa87",
+      "exp1/run_exp1.ps1": "56892955f1329f34fbbde110fe05748d03e5203decd7c7595fea64ae0e1d6f7c",
+      "exp3/run_exp3.ps1": "0da73cc2da21c1544428ba0f8c821423c0de29df275dcee11680335b4621f260",
+      "exp6/run_exp6.ps1": "8c032164f36712fbbde713d869d6ca7589b978e32b19439d753aad3c72a6ca8a",
+      "exp4/run_exp4.ps1": "d012692151be8d0f123079731185372f7a146f628c74924c1823467b4c4455f9",
+      "exp5/run_exp5.ps1": "112a0d0003e2ab790abfac972078371c2d4a8283b97881a707ac237fe8e1f174"
+    },
+    "validation": "See VALIDATION.md; full PowerShell workflow verified on Linux, native Windows CI added."
   }
 }

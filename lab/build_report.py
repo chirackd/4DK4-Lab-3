@@ -120,10 +120,11 @@ def compose():
     p('Limitations: no finite-buffer losses, propagation delays, acknowledgments, physical errors or power capture are modeled. Conclusions apply to the explicitly stated retry and reservation-pipelining rules. Departures before the cutoff do not reveal the ultimate delays of unfinished packets. Five-seed ranges describe observed variability and are not formal coverage intervals. The exact lecture slide curve was unavailable, and its conventional analytical counterpart was derived above. No course submission or instructor approval is asserted.')
     h('8. Reproducibility and source references')
     p('Primary specification: coe4dk4_lab_3_2026.pdf, pages 1–3 (preparation, six experiment groups and writeup requirements), with page 4 rubric. Code baseline: chirackd/4DK4-Lab-3, main checkout at commit 7a13b2e (full revision and source checksums are recorded in results/provenance.json). Queueing and ALOHA formulas are analytical checks derived for the stated ideal models, not additional simulated observations.')
-    p('From the repository root, run the following. The results CSVs are the authoritative observations; analyze.py generates summaries and 14 figures in both PNG and vector PDF. build_report.py produces this PDF and an equivalent Markdown writeup from one content definition. The supplied original source files are not edited; all additions are under lab/.')
-    code('make -C lab\npython3 lab/test_simulator.py\npython3 lab/run_experiments.py --time 1000000 --seeds 400452897 333333 222222 44444 987654321 --workers 4\npython3 lab/run_sensitivity.py\npython3 lab/analyze.py\npython3 lab/build_report.py')
+    p('From the repository root, the following PowerShell commands run natively on Windows with GCC and Python, without WSL or Make. Each experiment has an expN folder and run_expN.ps1 entry point, following the Lab 2 structure. Fresh runs and all 14 plots are saved under output/; they do not overwrite the reviewed lab/results and lab/figures used by this report. This writeup retains its original Linux reference observations. Windows libc random streams may differ, so new numerical discussion must use the new CSVs and plots. build_report.py retypesets this reference PDF with portable fonts. The supplied original C sources remain unchanged.')
+    code('.\\setup.ps1\n.\\run_all.ps1\n# One part, for example:\n.\\exp3\\run_exp3.ps1')
     table(['Artifact','Purpose'],[
-        ['lab/simulator.c and lab/Makefile','Added configurable C implementation and build target'],
+        ['lab/simulator.c and lab/runtime.py','Shared C model and portable native GCC build'],
+        ['setup.ps1; run_all.ps1; expN/run_expN.ps1','Native PowerShell setup, full workflow and per-part entry points'],
         ['lab/run_experiments.py; lab/run_sensitivity.py','Main parameter grid and horizon sensitivity'],
         ['lab/test_simulator.py','Analytical, flow-conservation and reproducibility checks'],
         ['lab/results/runs.csv; stations.csv','1,525 raw replication records and station-level outputs'],
@@ -134,9 +135,10 @@ def compose():
         ['lab/REPORT.md; Lab_3_Report.pdf','Editable writeup and PDF']])
     h('Appendix A. Added simulation code')
     p('The following is the complete added driver, lab/simulator.c. It reuses the supplied Simlib scheduler, event structures and RNG. No unchanged supplied code is reproduced. The source file in the bundle is the authoritative compilable version; long lines may wrap in this typeset appendix.')
-    code((ROOT/'simulator.c').read_text())
-    h('Appendix B. Build configuration')
-    code((ROOT/'Makefile').read_text())
+    code((ROOT/'simulator.c').read_text(encoding='utf-8'))
+    h('Appendix B. Optional legacy build configuration')
+    p('This Makefile is retained for existing Linux users. The native Windows workflow uses lab/runtime.py through the PowerShell scripts and does not require Make.')
+    code((ROOT/'Makefile').read_text(encoding='utf-8'))
 
 def render():
     md=[]
@@ -147,8 +149,11 @@ def render():
         elif kind=='code':md.append('```\n'+v.rstrip()+'\n```')
         elif kind=='table':
             heads,rows=v;md.append('| '+' | '.join(heads)+' |\n| '+' | '.join(['---']*len(heads))+' |\n'+'\n'.join('| '+' | '.join(map(str,row))+' |' for row in rows))
-    (ROOT/'REPORT.md').write_text('\n\n'.join(md)+'\n')
-    fontdir=Path('/usr/share/fonts/truetype/dejavu')
+    (ROOT/'REPORT.md').write_text('\n\n'.join(md)+'\n', encoding='utf-8')
+    import os, tempfile
+    os.environ.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "lab3-matplotlib"))
+    from matplotlib import get_data_path
+    fontdir=Path(get_data_path())/'fonts'/'ttf'
     for name,fn in [('DejaVu','DejaVuSans.ttf'),('DejaVu-Bold','DejaVuSans-Bold.ttf'),('DejaVuMono','DejaVuSansMono.ttf')]:
         pdfmetrics.registerFont(TTFont(name,str(fontdir/fn)))
     styles=getSampleStyleSheet()

@@ -209,20 +209,19 @@ Limitations: no finite-buffer losses, propagation delays, acknowledgments, physi
 
 Primary specification: coe4dk4_lab_3_2026.pdf, pages 1–3 (preparation, six experiment groups and writeup requirements), with page 4 rubric. Code baseline: chirackd/4DK4-Lab-3, main checkout at commit 7a13b2e (full revision and source checksums are recorded in results/provenance.json). Queueing and ALOHA formulas are analytical checks derived for the stated ideal models, not additional simulated observations.
 
-From the repository root, run the following. The results CSVs are the authoritative observations; analyze.py generates summaries and 14 figures in both PNG and vector PDF. build_report.py produces this PDF and an equivalent Markdown writeup from one content definition. The supplied original source files are not edited; all additions are under lab/.
+From the repository root, the following PowerShell commands run natively on Windows with GCC and Python, without WSL or Make. Each experiment has an expN folder and run_expN.ps1 entry point, following the Lab 2 structure. Fresh runs and all 14 plots are saved under output/; they do not overwrite the reviewed lab/results and lab/figures used by this report. This writeup retains its original Linux reference observations. Windows libc random streams may differ, so new numerical discussion must use the new CSVs and plots. build_report.py retypesets this reference PDF with portable fonts. The supplied original C sources remain unchanged.
 
 ```
-make -C lab
-python3 lab/test_simulator.py
-python3 lab/run_experiments.py --time 1000000 --seeds 400452897 333333 222222 44444 987654321 --workers 4
-python3 lab/run_sensitivity.py
-python3 lab/analyze.py
-python3 lab/build_report.py
+.\setup.ps1
+.\run_all.ps1
+# One part, for example:
+.\exp3\run_exp3.ps1
 ```
 
 | Artifact | Purpose |
 | --- | --- |
-| lab/simulator.c and lab/Makefile | Added configurable C implementation and build target |
+| lab/simulator.c and lab/runtime.py | Shared C model and portable native GCC build |
+| setup.ps1; run_all.ps1; expN/run_expN.ps1 | Native PowerShell setup, full workflow and per-part entry points |
 | lab/run_experiments.py; lab/run_sensitivity.py | Main parameter grid and horizon sensitivity |
 | lab/test_simulator.py | Analytical, flow-conservation and reproducibility checks |
 | lab/results/runs.csv; stations.csv | 1,525 raw replication records and station-level outputs |
@@ -390,7 +389,9 @@ int main(int argc,char **argv) {
 }
 ```
 
-# Appendix B. Build configuration
+# Appendix B. Optional legacy build configuration
+
+This Makefile is retained for existing Linux users. The native Windows workflow uses lab/runtime.py through the PowerShell scripts and does not require Make.
 
 ```
 CC = gcc

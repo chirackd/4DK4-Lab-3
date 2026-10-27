@@ -4,49 +4,29 @@ Read [Lab_3_Report.pdf](Lab_3_Report.pdf) or the editable [REPORT.md](REPORT.md)
 All six experiment groups in the supplied 2026 PDF are implemented and discussed.
 Group members: Daniel Chirackal and Ryan Phiby Mathew.
 
-## Build and run
+## Native Windows workflow
 
-Use the existing repository checkout. Requirements: GCC, Make, Python 3, and the
-Python packages listed in `requirements.txt` (already available in this environment).
+See the repository-root [README](../README.md) for prerequisites and the
+Lab-2-style PowerShell entry points. From the root, run:
 
-```sh
-make -C lab
-lab/simulator --mode fixed --stations 10 --backoff 10 --rate .1 --seed 400452897 --time 1000000 --warmup 100000
-lab/simulator --mode beb --stations 5 --rate .2 --seed 400452897
-lab/simulator --mode beb --stations 10 --rate .3 --persistent 0 --seed 400452897
-lab/simulator --mode slotted --stations 10 --rate .2 --seed 400452897
-lab/simulator --mode reservation --stations 10 --xr .1 --rate .9 --seed 400452897
+```powershell
+.\setup.ps1
+.\run_all.ps1
 ```
 
-`--time` is the total horizon and `--warmup` is the excluded initial interval.
-Defaults: total time 200000, warmup 20000, N=10, lambda=.1, mean backoff=10,
-Xr=.1, mode=fixed, seed=333333, persistent=-1 (none). Unit data duration X=1.
-Every option takes a value. Output includes one aggregate CSV record, followed by
-per-station CSV records. Throughput counts data completions, not reservations.
+GCC and Python 3.11+ are sufficient; no WSL, virtualization, or Make is needed.
+For a single part use `run_expN.ps1` at the root or in `expN/`. New runs write to
+`output/`, with separate part results and the combined plots. The supplied
+`lab/results`, `lab/figures`, and report remain the reviewed reference snapshot.
 
-## Regenerate everything
+Build-only: `python lab/runtime.py`. Full portable Python workflow:
+`python lab/run_all.py`. Add `--quick` for a smoke run, `--output PATH` to retain
+another run, or `--skip-analysis` for a standard-library-only simulation run.
 
-Run from the repository root:
-
-```sh
-make -C lab
-python3 lab/test_simulator.py
-python3 lab/run_experiments.py --time 1000000 --seeds 400452897 333333 222222 44444 987654321 --workers 4
-python3 lab/run_sensitivity.py
-python3 lab/analyze.py
-python3 lab/build_report.py
-```
-
-The main sweep performs 1525 replications; sensitivity adds 180. `run_experiments.py`
-asserts exact packet conservation and station completion accounting in every run.
-It overwrites generated CSVs; retain them first if you want an earlier result set.
-
-`analyze.py` creates 14 figures, each as PNG and vector PDF, plus numerical summaries.
-`build_report.py` produces Markdown and PDF from the same report content definition.
-A few narrative examples are intentionally recorded numbers, so if changing the grid,
-seeds, model or durations, revise the report discussion and accuracy table as well.
-`results/provenance.json` records the delivered source checksums and environment versions.
-For bitwise reproducibility use the recorded Linux/libc and GCC: Simlib uses libc rand().
+`build_report.py` retypesets the original reference writeup and uses fonts bundled
+with Matplotlib, so it also runs on Windows. Its narrative examples describe the
+reference results; new Windows random streams can differ. It is intentionally
+not called by `run_all.ps1` with new data.
 
 ## Experiment mapping
 

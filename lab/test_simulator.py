@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Model checks against queueing theory and exact sample-path invariants."""
-import csv, io, math, subprocess
+import csv, math, subprocess
+from runtime import build, executable_path
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 
 def run(**kw):
-    args=[str(ROOT/'simulator')]
+    args=[str(executable_path())]
     for k,v in kw.items(): args += ['--'+k.replace('_','-'),str(v)]
     s=subprocess.check_output(args,text=True).splitlines()
     r=next(csv.DictReader(s[:2])); stations=list(csv.DictReader(s[2:]))
@@ -15,6 +16,7 @@ def run(**kw):
     return r
 
 def main():
+    build()
     count=0
     for mode in ['fixed','beb','slotted','reservation']:
         for n in [1,5,10]:
@@ -33,7 +35,7 @@ def main():
     assert abs(float(r['delay'])-1.25)<.03,r['delay'];count+=1
     for mode in ['fixed','beb','slotted','reservation']:
         run(mode=mode,stations=10,rate=1.2,time=10000,warmup=1000,seed=1234);count+=1
-    invalid=subprocess.run([str(ROOT/'simulator'),'--mode','invalid'],capture_output=True)
+    invalid=subprocess.run([str(executable_path()),'--mode','invalid'],capture_output=True)
     assert invalid.returncode!=0;count+=1
     print(f'PASS: {count} model/reproducibility/overload/argument checks; exact flow conservation in every run')
 if __name__=='__main__':main()
