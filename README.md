@@ -12,7 +12,8 @@ model avoids copying and editing six versions of the simulator.
 You need:
 
 - **Native GCC** available as `gcc` in PowerShell. If you used GCC for Lab 2,
-  use that same installation. Check with `gcc --version`.
+  use that same installation. The build uses C11 for compatibility with older
+  MinGW GCC versions. Check with `gcc --version`.
 - **Python 3.11 or newer** (3.12 recommended), installed from
   [python.org](https://www.python.org/downloads/windows/), with its launcher/PATH enabled.
   Check with `py -3 --version` or `python --version`.

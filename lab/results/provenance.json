@@ -53,7 +53,7 @@
     "reference_commit": "0d8330cd779ded20859b10e619f573f8fb878314",
     "simulation_source_unchanged": true,
     "source_sha256": {
-      "lab/runtime.py": "bf77c0f7271aec0f74599fff3a7dfce39e365a72d8084201a9caa5472de9e684",
+      "lab/runtime.py": "a95372f148074f989ab20bfea0ae95ce3459c290392592da3eeb5588da6ceede",
       "lab/run_all.py": "ff3d32de08f5652e493f99447d0dd8c9929360f2f60fb6a935e5fd771c97edd8",
       "lab/run_experiments.py": "fe37f9583687ec2c7206c44e6ada8f1c5ad7ef2c0b19dbaa0a3a7b4c98c4668a",
       "lab/run_sensitivity.py": "712e07fb35790eb6d101e842c8bc455ab648c7b57c9e3e93a0ffcf06ca42ac0d",
@@ -78,6 +78,7 @@
       "exp4/run_exp4.ps1": "d012692151be8d0f123079731185372f7a146f628c74924c1823467b4c4455f9",
       "exp5/run_exp5.ps1": "112a0d0003e2ab790abfac972078371c2d4a8283b97881a707ac237fe8e1f174"
     },
-    "validation": "See VALIDATION.md; full PowerShell workflow verified on Linux, native Windows CI added."
+    "validation": "See VALIDATION.md; full PowerShell workflow verified on Linux, native Windows CI added.",
+    "native_c_standard": "C11 (compatible with older MinGW GCC)"
   }
 }

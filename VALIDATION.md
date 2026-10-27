@@ -39,3 +39,10 @@ The archived reference experiment provenance remains historical. Updated wrapper
 source hashes are recorded separately in `lab/results/provenance.json` under
 `workflow_refactor`; the old hashes are retained rather than relabeling the new
 runner as the exact program originally used on 26 October.
+
+## Older MinGW compatibility fix
+
+The native build uses `-std=c11`, which is sufficient for the simulator, instead
+of `-std=c17` (rejected by the user’s older MinGW GCC). A forced C11 build and
+all 19 model checks plus 3 integration tests passed after this change. Actual
+execution on that older Windows compiler remains to be confirmed by the user.

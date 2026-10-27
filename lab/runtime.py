@@ -27,7 +27,8 @@ def build(force=False):
     dependencies = sources + [PROJECT / 'simlib.h', PROJECT / 'trace.h', Path(__file__)]
     if force or not target.exists() or any(p.stat().st_mtime > target.stat().st_mtime for p in dependencies):
         target.parent.mkdir(parents=True, exist_ok=True)
-        command = [found, '-std=c17', '-O2', '-Wall', '-Wextra', '-Wpedantic',
+        # C11 is sufficient for the model and works with older MinGW GCC.
+        command = [found, '-std=c11', '-O2', '-Wall', '-Wextra', '-Wpedantic',
                    '-I', str(PROJECT), *(str(p) for p in sources), '-lm', '-o', str(target)]
         print(f'Building {target.name} with {found}', flush=True)
         subprocess.run(command, check=True, cwd=PROJECT)
