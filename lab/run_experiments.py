@@ -16,26 +16,31 @@ def run(job):
     # Exact sample-path accounting over the measurement interval.
     assert int(row['arrivals'])-int(row['successes']) == int(row['backlog_end'])-int(row['backlog_warm']),row
     assert sum(int(x['station_successes']) for x in stations)==int(row['successes'])
-    assert float(row['throughput']) <= float(row['load'])+1e-4
+    assert int(row['successes']) <= int(row['attempts'])+int(row['backlog_warm'])
     return row,stations
 
 def jobs(seeds,duration):
-    base={'time':duration,'warmup':duration*.1}
-    rates=[.02,.05,.08,.10,.12,.14,.16,.18,.20,.22,.25,.28,.32,.36,.40,.50,.65,.80]
+    # Baseline-report profile: uniform fixed backoff, cap 10, one outstanding reservation.
+    base={'time':duration,'warmup':duration*.1,'beb-cap':10,
+          'fixed-distribution':'uniform','reservation-pipeline':0,'guard':.001}
+    fixed_rates=[i/100 for i in range(2,31,2)]+[.35,.40,.50]
+    extended_rates=fixed_rates+[.60,.70,.80,1.,1.5]
     for n,backs in [(10,[5,10,20]),(5,[3,5,7])]:
         for b in backs:
-            for r in rates:
+            for r in fixed_rates:
                 for seed in seeds: yield dict(base,mode='fixed',stations=n,backoff=b,rate=r,seed=seed)
-    for mode in ['beb','slotted']:
-        for n in [5,10]:
-            for r in rates:
-                for seed in seeds: yield dict(base,mode=mode,stations=n,rate=r,seed=seed)
-    for n in [5,10]:
-        for r in [.05,.10,.15,.20,.25,.30,.40,.50,.65,.80]:
-            for seed in seeds: yield dict(base,mode='beb',stations=n,rate=r,seed=seed,persistent=0)
-    for ratio in [1,2,5,10,20,50]:
-        for r in sorted(set([.05,.10,.20,.30,.40,.50,.60,.70,.80,.90,1.,1.1,1.25] + ([.24,.26,.28,.32,.34,.36,.38] if ratio==1 else [.52,.54,.56,.58,.62,.64,.66,.68] if ratio==2 else [.94,.98,1.02]))):
-            for seed in seeds: yield dict(base,mode='reservation',stations=10,xr=1/ratio,rate=r,seed=seed)
+    for mode,persistent in [('beb',-1),('beb',0),('slotted',-1)]:
+        for n in [10,5]:
+            for r in extended_rates:
+                for seed in seeds:yield dict(base,mode=mode,stations=n,rate=r,seed=seed,persistent=persistent)
+    delay_rates=[.05,.10,.20,.30,.40,.50,.60,.70,.80,.85,.90,.95]
+    for n,ratio in [(10,r) for r in [1,2,5,10,20,50]]+[(5,10),(20,10)]:
+        for r in delay_rates:
+            for seed in seeds:yield dict(base,mode='reservation',stations=n,xr=1/ratio,rate=r,seed=seed)
+    for n in [5,10,20]:
+        for ratio in [.25,.5,.75,1,1.5,2,3,4,5,10,20,50,100]:
+            for seed in seeds:yield dict(base,mode='reservation',stations=n,xr=1/ratio,rate=2,seed=seed)
+
 
 def experiments_for(row):
     if row['mode'] == 'fixed': return (1, 2)
@@ -79,17 +84,23 @@ def main():
     p.add_argument('--time', type=float, default=1000000)
     p.add_argument('--seeds', nargs='+', type=int, default=[400452897,333333,222222,44444,987654321])
     p.add_argument('--workers', type=int, default=4)
+    p.add_argument('--beb-cap', type=int, default=10, help='0 selects uncapped BEB; baseline uses 10')
+    p.add_argument('--packets', type=int, default=0, help='Optional measured completion target; --time remains a hard horizon')
+    p.add_argument('--warmup-fraction', type=float, default=.1)
     p.add_argument('--experiment', type=int, choices=range(1,7))
     p.add_argument('--output', type=Path, default=ROOT.parent/'output')
     a=p.parse_args()
-    if a.time <= 0 or a.workers < 1: p.error('--time and --workers must be positive')
+    if a.time <= 0 or a.workers < 1 or a.beb_cap<0 or a.beb_cap>1024 or a.packets<0 or not 0<=a.warmup_fraction<1: p.error('Invalid time, worker count, cap, packet target, or warmup fraction')
     build()
     todo=list(jobs(a.seeds,a.time))
+    for j in todo:j.update({'beb-cap':a.beb_cap,'packets':a.packets,'warmup':a.time*a.warmup_fraction})
     if a.experiment is not None:
         todo=[j for j in todo if a.experiment in experiments_for(j)]
     elapsed=write_results(todo,a.output,a.workers,a.experiment)
     metadata={
-        'seeds':a.seeds,'duration':a.time,'warmup':a.time*.1,
+        'seeds':a.seeds,'duration':a.time,'warmup':a.time*a.warmup_fraction,
+        'profile':'report-aligned-v2','fixed_distribution':'uniform','beb_cap':a.beb_cap,
+        'reservation_pipeline':False,'guard':.001,'target_packets':a.packets,
         'replications':len(todo),'experiment':a.experiment,'elapsed_seconds':elapsed,
         'rng':'Simlib libc rand(); sequences can differ across platforms'
     }

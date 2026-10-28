@@ -23,7 +23,6 @@ jobs:
           .\setup.ps1
           .\run_all.ps1 -Quick
           .\.venv\Scripts\python.exe -m unittest discover -s tests -v
-          .\.venv\Scripts\python.exe lab/build_report.py
       - uses: actions/upload-artifact@v4
         with:
           name: windows-native-smoke-results

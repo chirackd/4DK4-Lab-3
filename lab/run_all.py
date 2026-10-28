@@ -27,8 +27,10 @@ def main():
     call('run_sensitivity.py',*common,*quick_sens)
     if not a.skip_analysis:
         call('analyze.py','--results-dir',output/'results','--figures-dir',output/'figures')
+        if not a.quick:call('validate_trends.py','--results-dir',output/'results')
+        call('build_report.py','--results-dir',output/'results','--figures-dir',output/'figures','--output-dir',output)
     print(f'Complete: {output}')
     if a.quick:print('QUICK SMOKE RUN: these shortened results are not submission-quality experiments.')
-    print('The supplied lab report remains the historical Linux reference; use your new CSVs and plots for new numerical discussion.')
+    print("Plots and report use this run's own measurements; checked-in lab/ artifacts remain separate until explicitly refreshed.")
 
 if __name__=='__main__': main()

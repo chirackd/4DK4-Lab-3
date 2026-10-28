@@ -1,65 +1,44 @@
-# 4DK4 Lab 3 — complete experiment package
+# Lab 3 model and reproducible analysis
 
-Read [Lab_3_Report.pdf](Lab_3_Report.pdf) or the editable [REPORT.md](REPORT.md).
-All six experiment groups in the supplied 2026 PDF are implemented and discussed.
-Group members: Daniel Chirackal and Ryan Phiby Mathew.
+Start with the root [README](../README.md). Run `setup.ps1` then `run_all.ps1`
+natively in PowerShell. No WSL or Make is required. The run creates fresh
+`output/results`, 16 figures, and a report whose numbers are read from that run.
 
-## Native Windows workflow
+The checked-in [PDF](Lab_3_Report.pdf), [Markdown](REPORT.md), results, and figures
+are a complete regenerated example under the **report-aligned-v2** configuration.
+See [model differences](../docs/reference_alignment.md) for the supplied DOCX
+interpretation and the retained differences in stopping rule/seeds.
 
-See the repository-root [README](../README.md) for prerequisites and the
-Lab-2-style PowerShell entry points. From the root, run:
+| Part | Driver mode | Main figures |
+|---|---|---|
+| 1 | `fixed` | `fixed_delay_arrival` |
+| 2 | `fixed` | `fixed_throughput_arrival`, `fixed_delay_throughput`, `fixed_throughput_load` |
+| 3 | `beb --beb-cap 10` | `beb_comparison`, `capture_repeat_fraction` |
+| 4 | `beb --persistent 0` | `persistent_delay`, `persistent_throughput`, `persistent_total_throughput` |
+| 5 | `slotted --beb-cap 10 --guard .001` | `slotted_delay_throughput`, `slotted_throughput_arrival`, `slotted_throughput_load` |
+| 6 | `reservation` | `reservation_delay`, `reservation_throughput`, `reservation_capacity` |
+| Accuracy | selected cases at three horizons | `accuracy_runlength` |
 
-```powershell
-.\setup.ps1
-.\run_all.ps1
-```
+Default C controls: `--mode fixed`, `--stations 10`, `--rate .1`, `--backoff 10`,
+`--time 200000`, `--warmup 20000`, `--seed 333333`, `--xr .1`, `--persistent -1`,
+`--fixed-distribution uniform`, `--beb-cap 10`, `--guard .001`,
+`--reservation-pipeline 0`, `--packets 0`. Every option takes a value. The full
+runner supplies its own documented grids, horizons, and five-seed list.
 
-GCC and Python 3.11+ are sufficient; no WSL, virtualization, or Make is needed.
-For a single part use `run_expN.ps1` at the root or in `expN/`. New runs write to
-`output/`, with separate part results and the combined plots. The supplied
-`lab/results`, `lab/figures`, and report remain the reviewed reference snapshot.
+Alternative controls are explicit: `--beb-cap 0` is uncapped; fixed distribution
+can be `exponential`; pipeline `1` releases the station FIFO head at reservation
+success. These are different model assumptions, not graphical style settings.
+`--packets N` stops after N measured completions or the hard `--time` horizon,
+whichever comes first; the printed actual elapsed time is used in rate denominators.
 
-Build-only: `python lab/runtime.py`. Full portable Python workflow:
-`python lab/run_all.py`. Add `--quick` for a smoke run, `--output PATH` to retain
-another run, or `--skip-analysis` for a standard-library-only simulation run.
+Packet conservation is exact across warmup and the measurement interval.
+Reservation packet throughput, completed-work rate, attempted minislot load, and
+exact data-server utilization are separate columns. Data capacity plots use
+utilization at a dedicated overloaded arrival rate, rather than a peak of the
+ordinary delay sweep. The data queue is bounded by N under the default model.
 
-`build_report.py` retypesets the original reference writeup and uses fonts bundled
-with Matplotlib, so it also runs on Windows. Its narrative examples describe the
-reference results; new Windows random streams can differ. It is intentionally
-not called by `run_all.ps1` with new data.
-
-## Experiment mapping
-
-| PDF part | Mode and outputs |
-|---|---|
-| 1 | `fixed`; `fixed_delay_arrival` |
-| 2 | `fixed`; `fixed_throughput_arrival`, `fixed_delay_throughput`, `fixed_throughput_load` |
-| 3 | `beb`; `beb_comparison` |
-| 4 | `beb --persistent 0`; `persistent_delay`, `persistent_throughput` |
-| 5 | `slotted`; `slotted_delay_throughput`, `slotted_throughput_arrival`, `slotted_throughput_load` |
-| 6 | `reservation`; `reservation_delay`, `reservation_throughput`, `reservation_capacity` |
-| Accuracy | `accuracy_runlength`, `results/sensitivity*.csv` |
-
-## Model decisions worth retaining
-
-- The PDF describes exponential fixed-mean backoff, while the supplied code draws
-  uniform backoff. This implementation follows the PDF for Parts 1–2 and documents
-  the discrepancy. The original sources are unchanged and are not used as if their
-  results came from the exponential model.
-- BEB is uncapped as specified. Slotted BEB uses integer slot windows including zero.
-- In Part 4 only station 0 retries at the next unit time boundary; other stations
-  retain unslotted BEB. This resolves “next slot” before the separate slotted part.
-- Reservations and data run concurrently. A successful reservation dequeues the
-  station packet into the shared data queue, allowing that station's next reservation.
-  Mean data length is 1 and reservation backoff is measured in minislots.
-- Filled plot markers indicate a descriptive flow-balance check, not proven stability.
-  Whiskers are seed min–max, not confidence intervals. Overload delay is the completed-
-  packet finite-window mean; unfinished packets are not silently counted as delivered.
-- The conventional Poisson ALOHA curves are derived analytical references. The actual
-  lecture slides were not provided. Capture and finite-source correlations can cause
-  measured throughput to exceed those reference peaks.
-
-The available Data skills' shared web-report runtime and referenced shared resources
-were unavailable in this machine. The requested academic writeup is therefore delivered
-as a standalone PDF/Markdown package, not a hosted editable Data app. No publication or
-course submission has been performed.
+`test_simulator.py` runs 29 model/reproducibility checks. `validate_trends.py`
+checks seven conceptual relationships on a full generated dataset. The standard
+library integration tests under `tests/` cover native build paths and exports.
+`results/provenance.json` records source/data hashes and the comparison document's
+hash; it does not substitute the comparison report's measurements for our own.

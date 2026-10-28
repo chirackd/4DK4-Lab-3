@@ -36,12 +36,28 @@ class NativeWorkflowTests(unittest.TestCase):
                             '--workers','2','--output',temp],check=True,capture_output=True,text=True)
             folder=Path(temp)/'exp3'
             with (folder/'runs.csv').open(newline='',encoding='utf-8') as f:rows=list(csv.DictReader(f))
-            self.assertEqual(len(rows),36)
+            self.assertEqual(len(rows),46)
             self.assertEqual({r['mode'] for r in rows},{'beb'})
             self.assertTrue(all(int(r['persistent'])==-1 for r in rows))
-            self.assertEqual(len((folder/'exp3_results.txt').read_text(encoding='utf-8').splitlines()),36)
+            self.assertEqual(len((folder/'exp3_results.txt').read_text(encoding='utf-8').splitlines()),46)
             self.assertFalse((Path(temp)/'results/runs.csv').exists())
             self.assertFalse((Path(temp)/'exp4').exists())
+
+    def test_nonbinary_minislot_configuration_roundtrips_and_replays(self):
+        sys.path.insert(0,str(PROJECT/'lab'))
+        from runtime import build
+        executable=build()
+        duration=str(1/.75)
+        command=[str(executable),'--mode','reservation','--stations','10','--rate','2',
+                 '--xr',duration,'--seed','400452897','--time','50000','--warmup','5000']
+        first=subprocess.check_output(command,text=True).splitlines()
+        row=next(csv.DictReader(first[:2]))
+        self.assertEqual(float(row['xr']),float(duration))
+        replay=[str(executable),'--mode',row['mode'],'--stations',row['stations'],
+                '--rate',row['rate'],'--xr',row['xr'],'--seed',row['seed'],
+                '--time',row['horizon'],'--warmup',row['warmup']]
+        second=subprocess.check_output(replay,text=True).splitlines()
+        self.assertEqual(first,second)
 
     def test_missing_compiler_reports_native_install_action(self):
         env=dict(os.environ,CC='lab3-compiler-that-does-not-exist')

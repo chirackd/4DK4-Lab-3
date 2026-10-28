@@ -1,0 +1,65 @@
+{
+  "method": "Broad qualitative comparisons on independently simulated data; not fitted to supplied report values",
+  "checks": [
+    {
+      "check": "Longer fixed backoff raises the congested-state throughput",
+      "passed": true,
+      "observed": {
+        "b5": 0.049398,
+        "b10": 0.1769291111112,
+        "b20": 0.3107200000002
+      }
+    },
+    {
+      "check": "Capped BEB carries moderate load beyond the fixed-backoff ceiling",
+      "passed": true,
+      "observed": {
+        "beb_S": 0.499998888889,
+        "lambda": 0.5
+      }
+    },
+    {
+      "check": "BEB same-station success bursts increase with offered traffic",
+      "passed": true,
+      "observed": {
+        "low": 0.1232570092638,
+        "high": 0.90568981185
+      }
+    },
+    {
+      "check": "Immediate persistent retries reduce total high-load throughput",
+      "passed": true,
+      "observed": {
+        "persistent": 0.4856695555553999,
+        "all_beb": 0.9479457777778
+      }
+    },
+    {
+      "check": "Persistent station has lower delay than competing stations",
+      "passed": true,
+      "observed": {
+        "persistent_D": 3.836471362008,
+        "others_D": 812.5068434573088
+      }
+    },
+    {
+      "check": "Slot alignment reduces moderate-load BEB delay",
+      "passed": true,
+      "observed": {
+        "slotted_D": 4.082706196636,
+        "unslotted_D": 176.4306612372
+      }
+    },
+    {
+      "check": "Reservation capacity rises and approaches the data-channel ceiling",
+      "passed": true,
+      "observed": {
+        "ratio_.25": 0.2093646192924,
+        "ratio_1": 0.4658319813941999,
+        "ratio_5": 0.9994172013352,
+        "ratio_10": 0.9999990862816
+      }
+    }
+  ],
+  "passed": true
+}

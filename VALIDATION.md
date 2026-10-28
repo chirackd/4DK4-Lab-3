@@ -1,48 +1,57 @@
-# Native workflow validation — 27 October 2026
+# Validation of the report-aligned simulation profile
 
-Reference structure inspected: `chirackd/COMPENG_4DK4_Lab_2`, commit
-`0d8330cd779ded20859b10e619f573f8fb878314` (root run_exp1/run_exp2 PowerShell
-scripts and separate exp3–exp6 folders). This refactor supplies per-part folders
-and PowerShell scripts, while retaining one shared C implementation.
+The user-supplied `COE4DK4_Lab3_Report.docx` was parsed for its assumptions, relevant
+code appendices, tables, and all 13 embedded graphs. Model choices and retained
+differences are recorded in `docs/reference_alignment.md`.
 
-Verified in the current Linux execution environment with GCC 14.2 and actual
-PowerShell 7.5.4 (official release archive verified against its SHA-256 list):
+## Current local evidence
 
-- `setup.ps1`: created a fresh `.venv`, installed pinned packages, compiled the
-  simulator directly with GCC, and passed all 19 existing model checks.
-- All 17 authored PowerShell scripts parse successfully.
-- `build.ps1` and an individual root experiment script execute successfully.
-- A script invoked from inside `exp6/` also resolves the root and accepts `-Time`.
-- `run_all.ps1 -Quick`: 305 one-seed main replications, 36 sensitivity
-  replications, all 14 PNG/PDF figures. This is explicitly a smoke run.
-- `run_all.ps1`: 1,525 main replications and 180 sensitivity replications, all
-  14 figures. Every run checks packet conservation and station completion totals.
-- The full refactored workflow's 1,525 aggregate rows, 12,750 station rows, and
-  180 sensitivity rows match the original reference data within CSV precision
-  after sorting by configuration/seed. The C model and RNG have not changed.
-- All six experiment directories contain CSVs, text output, and manifests with
-  matching record counts (540, 540, 180, 100, 180, 525). Parts 1 and 2 deliberately
-  share the same 540 fixed-backoff replications.
-- Three new integration tests pass: compile/run from a path containing spaces,
-  per-part export/routing and output isolation, and a missing-compiler diagnostic.
-- Output directories containing spaces work through the real PowerShell scripts.
-- PDF rendering uses Matplotlib's bundled fonts; the updated reference report
-  retains the group names, all 14 figure captions, and native setup instructions.
+Platform: Linux, GCC 14.2 in C11 mode, Python 3.12; actual PowerShell 7.5.4 used
+for the full entry point. Native Windows execution remains a separate CI check.
 
-No Windows VM is attached to this execution environment. Local PowerShell-on-
-Linux tests do not establish actual Windows execution. The added GitHub Actions
-workflow has a Windows job using Windows PowerShell, native MSYS2 UCRT64 GCC,
-Python setup, the complete quick pipeline, integration tests, and PDF generation.
-Its run result is separate from the local checks recorded here.
+- **29 model checks pass**, including queueing-theory limits, exact flow accounting,
+  repeatability, capped/uncapped BEB, uniform/exponential alternatives, immediate
+  persistence, guard-time service overhead, the bounded single-outstanding
+  reservation model, capacity ordering, and completion-target stopping.
+- **4 integration tests pass**: build/run under paths containing spaces, individual
+  experiment exports, missing-compiler guidance, and replay of a non-binary
+  minislot ratio from its exact recorded configuration.
+- The full **`run_all.ps1`** pipeline completed **1,905 main replications**, **180
+  sensitivity replications**, **16 figures** (PNG and vector PDF), and a new
+  CSV-backed report. Raw main output contains **16,600 station records**.
+- **7 conceptual trend checks pass** on those actual full-run measurements. They
+  compare broad relative behaviors, not golden coordinates from the DOCX.
+  Their observations are saved in `lab/results/trend_validation.json`.
+- A one-seed quick PowerShell pipeline also completed and correctly labeled its
+  shorter run and missing confidence intervals in the generated report.
+- The final executable replays **selected configurations across every protocol
+  and all N=10 capacity ratios** with identical measured values, using exact CSV
+  parameter strings. Configuration floats now retain 17 significant digits;
+  earlier 9-digit minislot output could change a replayed trajectory.
+- Every main and sensitivity replication verifies arrivals minus completions
+  against backlog change, and reconciles station completions. The reservation
+  implementation asserts at most N packets in its data stage by default.
+- The new PDF contains the group names, all 16 figure captions, current native
+  commands, and values read from this run's summaries. Extracted PDF text is
+  within page bounds. Representative scientific plots and the first PDF page
+  were visually inspected; no exact graphical equality to the DOCX is claimed.
 
-The archived reference experiment provenance remains historical. Updated wrapper
-source hashes are recorded separately in `lab/results/provenance.json` under
-`workflow_refactor`; the old hashes are retained rather than relabeling the new
-runner as the exact program originally used on 26 October.
+## Representative independently measured trends
 
-## Older MinGW compatibility fix
+For N=10, capped BEB at λ=.5 carries approximately .50 packets/X. At λ=.2 its
+mean delay is approximately 176 X, while slotted BEB is approximately 4.08 X.
+At λ=1.5, adding the persistent station reduces total throughput from about .95
+to .49 packets/X. Reservation busy-fraction capacity for N=10 rises from about
+.21 at X/Xr=.25, to .47 at ratio 1, and nearly 1 at ratio 5. These values are
+observations, not targets imposed on the simulation.
 
-The native build uses `-std=c11`, which is sufficient for the simulator, instead
-of `-std=c17` (rejected by the user’s older MinGW GCC). A forced C11 build and
-all 19 model checks plus 3 integration tests passed after this change. Actual
-execution on that older Windows compiler remains to be confirmed by the user.
+## Limits
+
+The baseline uses cap 10 as the comparison report's explicit assumption, while
+`--beb-cap 0` retains the handout's uncapped variant. Fixed-time stopping and
+warmup differ from the reference report's completion-count runs. Overloaded
+completed-packet delay is a finite-window statistic; a balanced flow screen does
+not prove stationarity. Windows libc random streams can change numerical values.
+The existing Windows GitHub Actions job exercises PowerShell, native GCC, model
+checks, quick graphs/report generation, and integration tests; its result is not
+represented by the local Linux evidence above.

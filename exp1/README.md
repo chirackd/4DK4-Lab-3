@@ -12,4 +12,4 @@ the original root-level Simlib files; it is not copied into six divergent versio
 
 Parts 1 and 2 measure the same fixed-backoff simulations. Running `run_all.ps1`
 computes them once and exports their observations to both experiment folders.
-Run all experiments before generating the combined 14 plots.
+Run all experiments before generating the combined 16 plots and fresh report.
