@@ -2,11 +2,14 @@
 S&W pd=0.2, pa=0: measured 0.067820, renewal analysis 0.067797.
 S&W pd=0, pa=0.2: measured 0.067809, renewal analysis 0.067797.
 S&W pd=0.2, pa=0.2: measured 0.051464, renewal analysis 0.051447.
-S&W pd=0.5, pa=0.5: measured 0.017776, renewal analysis 0.017857.
+S&W pd=0.5, pa=0.5: measured 0.017775, renewal analysis 0.017857.
 
-Additional verification:
-- Eight high-error finite cases passed AddressSanitizer and UndefinedBehaviorSanitizer.
-- All finite main-suite runs delivered exactly N unique packets; attempt counts were at least N.
-- All 17 figure references in REPORT.md exist.
-- Reliability sweep: results/reliability.csv.
-- PDF visual inspection: title/summary and a representative plot page; embedded fonts used for portability.
+Revised evidence verification:
+- 144 independent Python/C cases passed (time, attempts, delivered count).
+- 13 added analytical and exact-boundary checks passed.
+- 16 heavy-error cases passed AddressSanitizer and UndefinedBehaviorSanitizer.
+- All 42025 main-suite rows validated; finite runs delivered exactly N.
+- Saved summary means independently recomputed from raw rows.
+- Correct fixed Ws=64, five backlogged seeds and100 finite seeds verified.
+- PDF visual review and DOCX integrity checked;23 tables and17 figures.
+- Three run lengths in results/reliability.csv; matched checks in reference_comparison.csv.

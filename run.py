@@ -15,7 +15,7 @@ WS=[1,2,4,6,8,10,11,12,16,24,32,48,64]
 PROFILES=[('S&W',1),('GBN',1),('SR Wr=4',4),('SR Wr=16',16),('SR Wr=64',64)]
 EXE=ROOT/('arq.exe' if os.name=='nt' else 'arq')
 
-def simulate(ws,wr,pd=0,pa=0,tout=15,seed=400452897,duration=110000,warm=10000,n=0,trace=0):
+def simulate(ws,wr,pd=0,pa=0,tout=15,seed=400452897,duration=1010000,warm=10000,n=0,trace=0):
     args=[ws,wr,pd,pa,tout,seed,duration,warm,n,trace]
     s=subprocess.check_output([str(EXE),*map(str,args)],text=True)
     vals=list(map(float,s.split('RESULT,')[-1].strip().split(',')))
@@ -50,20 +50,20 @@ def validate():
 
 def configs(exp):
     out=[]
-    def add(part,xname,xs,pd=0,pa=0,tout=15,n=0,wsfixed=32):
+    def add(part,xname,xs,pd=0,pa=0,tout=15,n=0,wsfixed=64):
         for x in xs:
             for label,wr in PROFILES:
                 ws=1 if label=='S&W' else (int(x) if xname=='ws' else wsfixed)
                 kw=dict(ws=ws,wr=wr,pd=pd,pa=pa,tout=tout,n=n)
                 if xname!='ws':kw[xname]=x
-                for seed in (SEEDS if not n else [400452897+i*104729 for i in range(30)]):
+                for seed in (SEEDS if not n else [400452897+i*104729 for i in range(100)]):
                     out.append(dict(exp=part,profile=label,xname=xname,x=x,seed=seed,**kw))
     if exp in [0,2]:add('2','ws',WS)
     if exp in [0,3]:
         add('3a','pd',[0,.01,.025,.05,.1,.2,.3,.4,.5])
         add('3b','ws',WS,pd=.1)
-    if exp in [0,4]:add('4','pa',[0,.01,.025,.05,.1,.2,.3,.4,.5],pd=.1)
-    if exp in [0,5]:add('5','tout',[2,5,8,10,11,12,15,20,30,50,75,100],pd=.1,pa=.1)
+    if exp in [0,4]:add('4','pa',[0,.01,.025,.05,.1,.2,.3,.4,.5,.7,.9],pd=.1)
+    if exp in [0,5]:add('5','tout',[2,5,8,10,10.99,11,11.01,11.5,12,15,20,30,50,75,100],pd=.1,pa=.1)
     if exp in [0,6]:
         for pd_,pa in [(0,0),(.05,0),(.05,.05)]: add(f'6_pd{pd_}_pa{pa}','ws',WS,pd=pd_,pa=pa,n=100)
     if exp in [0,7]:
@@ -74,7 +74,7 @@ def configs(exp):
 
 def run_one(c):
     kw={k:c[k] for k in ['ws','wr','pd','pa','tout','n','seed']}
-    r,_=simulate(**kw,warm=0 if c['n'] else 10000,duration=10000000 if c['n'] else 110000)
+    r,_=simulate(**kw,warm=0 if c['n'] else 10000,duration=10000000 if c['n'] else 1010000)
     if c['n']: assert r['delivered']==c['n'] and r['attempts']>=c['n']
     return {**c,**r}
 
@@ -86,8 +86,8 @@ def plots(raw):
         d=dict(zip(keys,key));d['replications']=len(g)
         for metric in ['efficiency','attempts_per_delivery','completion_ms']:
             d[metric]=g[metric].mean()
-            # t_4 for backlogged, t_29 for finite runs
-            d[metric+'_ci95']=(2.776445105 if len(g)==5 else 2.045229642)*g[metric].std(ddof=1)/math.sqrt(len(g))
+            # t_4 for backlogged, t_99 for finite runs
+            d[metric+'_ci95']=(2.776445105 if len(g)==5 else 1.984216952)*g[metric].std(ddof=1)/math.sqrt(len(g))
         rows.append(d)
     a=pd.DataFrame(rows);a.to_csv(ROOT/'results/summary.csv',index=False)
     plt.rcParams.update({'font.size':10,'axes.grid':True,'grid.alpha':.2,'axes.spines.top':False,'axes.spines.right':False})
@@ -107,7 +107,7 @@ def plots(raw):
                 xx=np.linspace(0,.5,200);q=1-xx
                 ax.plot(xx,q/(11*q+15*xx),'k:',lw=1,label='S&W renewal analysis')
                 ax.plot(xx,q,'k--',lw=1,label='Ideal full-window SR bound 1-pd')
-                ax.plot(xx,q/(1+10*xx),color='gray',ls='-.',lw=1,label='Idealized GBN RTT-recovery reference')
+                ax.plot(xx,q/(1+14*xx),color='gray',ls='-.',lw=1,label='GBN per-frame recovery reference (T=15 ms)')
             labels={'ws':'Send window Ws (packets)','pd':'Data error probability pd','pa':'ACK error probability pa','tout':'Retransmission timeout (ms)'}
             ylabels={'efficiency':'Link efficiency (unique delivered bits / link capacity)','attempts_per_delivery':'Data transmission attempts / delivered packet','completion_ms':'Mean acknowledged transfer completion time (ms)'}
             row=g.iloc[0];fixed=[]
@@ -115,7 +115,7 @@ def plots(raw):
             if xn!='pa':fixed.append(f'pa={row.pa:g}')
             suffix=', '.join(fixed)
             if xn!='tout':suffix+=f', timeout={row.tout:g} ms'
-            if xn!='ws':suffix+=', GBN/SR Ws=32'
+            if xn!='ws':suffix+=', GBN/SR Ws=64'
             if row.n:suffix+=f', N={row.n}'
             ax.set(xlabel=labels[xn],ylabel=ylabels[metric],title=f'Experiment {exp.split("_")[0]}: {suffix}')
             ax.set_ylim(bottom=0);ax.legend(fontsize=8,loc='best')
@@ -130,7 +130,7 @@ def main():
     ap=argparse.ArgumentParser();ap.add_argument('--exp',type=int,default=0,choices=range(8));ap.add_argument('--workers',type=int,default=4);ap.add_argument('--plots-only',action='store_true');args=ap.parse_args()
     (ROOT/'results').mkdir(exist_ok=True)
     if args.plots_only:
-        plots(pd.read_csv(ROOT/'results/runs.csv'));return
+        plots(pd.read_csv(ROOT/'results/runs.csv.gz'));return
     subprocess.run(['gcc','-O2','-std=c11','-Wall','-Wextra','-I',str(ROOT/'vendor'),str(ROOT/'src/arq.c'),str(ROOT/'vendor/simlib.c'),'-lm','-o',str(EXE)],check=True)
     print('\n'.join(validate()),flush=True)
     if args.exp==1:return
@@ -143,7 +143,7 @@ def main():
         for i,r in enumerate(pool.map(run_one,unique.values())):
             cache[key(r)]={k:r[k] for k in ['efficiency','attempts_per_delivery','completion_ms','attempts','delivered']}
             if i%200==0: print(f'Completed {i+1}/{len(unique)} unique runs',flush=True)
-    raw=pd.DataFrame([{**c,**cache[key(c)]} for c in cs]);path=ROOT/'results/runs.csv'
+    raw=pd.DataFrame([{**c,**cache[key(c)]} for c in cs]);path=ROOT/'results/runs.csv.gz'
     if args.exp and path.exists():
         old=pd.read_csv(path);old=old[~old.exp.astype(str).isin(raw.exp.astype(str))];raw=pd.concat([old,raw],ignore_index=True)
     raw.to_csv(path,index=False);plots(raw)

@@ -8,7 +8,7 @@
 #include "simlib.h"
 typedef struct { int type,seq,gen; } Msg;
 typedef struct {
- int ws,wr,n,cap,base,next,recv,busy,done,trace,tgen;
+ int ws,wr,n,cap,base,next,recv,busy,done,trace,tgen,legacy,individual,cumulative_only;
  double pd,pa,tout,end,warm; long attempts,delivered;
  int *acked,*buffer,*pending,*generation;
  uint64_t rd,ra;
@@ -34,6 +34,7 @@ static void gbntimer(Simulation_Run_Ptr s) {
 }
 static void kick(Simulation_Run_Ptr s) {
  Model *m=s->data; if(m->busy || m->done) return;
+ if(s->eventlist->front_ptr && s->eventlist->front_ptr->occurrence_time==s->clock->time)return;
  int p=-1; for(int i=m->base;i<m->next;i++) if(m->pending[i]&&!m->acked[i]){p=i;break;}
  int fresh=0;
  if(p<0 && m->next<m->base+m->ws && (!m->n||m->next<m->n)) {p=m->next++;fresh=1;}
@@ -43,7 +44,7 @@ static void kick(Simulation_Run_Ptr s) {
  logmsg(s,fresh?"TX new":"TX retry",p);
  schedule(s,TXEND,p,0,s->clock->time+1);
  schedule(s,DATA,p,0,s->clock->time+6);
- if(m->wr>1) schedule(s,TIMER,p,++m->generation[p],s->clock->time+m->tout+1e-8);
+ if(!m->legacy || m->wr>1) schedule(s,TIMER,p,++m->generation[p],s->clock->time+m->tout);
  else if(p==m->base) gbntimer(s);
 }
 static void event(Simulation_Run_Ptr s,void *arg) {
@@ -58,30 +59,35 @@ static void event(Simulation_Run_Ptr s,void *arg) {
     m->buffer[p]=1;sel=p;logmsg(s,"DATA accepted",p);
     while(m->buffer[m->recv]) {m->buffer[m->recv]=0;m->recv++;if((m->n || s->clock->time>m->warm))m->delivered++;}
    } else logmsg(s,"DATA outside window",p);
-   /* Encode cumulative prefix and optional selective ACK in two messages.
-    * One error draw applies to the entire ACK, including both fields. */
+   /* One atomic ACK contains both cumulative and selective information. */
    if(uniform(&m->ra)<m->pa) logmsg(s,"ACK lost",p);
-   else {schedule(s,ACK,m->recv-1,0,s->clock->time+5);
-    if(m->wr>1 && sel>=m->recv) schedule(s,ACK,sel,1,s->clock->time+5);}
+   else schedule(s,ACK,m->recv-1,(!m->cumulative_only && sel>=m->recv)?sel+1:0,s->clock->time+5);
   }
  }
  if(e.type==ACK) {
-  logmsg(s,e.gen?"ACK selective":"ACK cumulative",p);
+  logmsg(s,"ACK cumulative",p);
+  if(e.gen>0){int sel=e.gen-1;if(sel<m->next)m->acked[sel]=1;logmsg(s,"ACK selective",sel);}
   int old=m->base;
-  if(e.gen) {if(p<m->next)m->acked[p]=1;}
-  else for(int i=m->base;i<=p && i<m->next;i++) m->acked[i]=1;
+  for(int i=m->base;i<=p && i<m->next;i++) m->acked[i]=1;
   while(m->base<m->next && m->acked[m->base]) m->base++;
-  if(m->wr==1 && old!=m->base) gbntimer(s);
+  if(m->legacy && m->wr==1 && old!=m->base) gbntimer(s);
   if(m->n && m->base==m->n) m->done=1;
  }
  if(e.type==TIMER) {
-  if(m->wr==1) {
+  /* Let ACKs at an exact timestamp beat timeouts; timeout precedes a queued TXEND. */
+  for(Event_Container_Ptr c=s->eventlist->front_ptr;c && c->occurrence_time==s->clock->time;c=c->next_container)
+   if(((Msg*)c->event.attachment)->type==ACK){schedule(s,TIMER,p,e.gen,s->clock->time);return;}
+  if(m->legacy && m->wr==1) {
    if(e.gen==m->tgen && p==m->base && m->base<m->next){
     logmsg(s,"TIMEOUT go-back",p);m->tgen++;
     for(int i=m->base;i<m->next;i++) m->pending[i]=1;
    }
   } else if(p>=m->base && !m->acked[p] && e.gen==m->generation[p]) {
-   logmsg(s,"TIMEOUT selective",p);m->pending[p]=1;
+   logmsg(s,"TIMEOUT per-frame",p);m->pending[p]=1;m->generation[p]++;
+   /* Conservative replay policy, not a deduction that the receiver lost them.
+    * An expired timer can also mean ACK loss. Queued timers are invalidated. */
+   if(!m->legacy && !m->individual) for(int i=p+m->wr;i<m->next;i++)
+    if(!m->acked[i] && !m->pending[i]){m->pending[i]=1;m->generation[i]++;}
   }
  }
  assert(m->base<=m->next && m->next-m->base<=m->ws);
@@ -89,7 +95,11 @@ static void event(Simulation_Run_Ptr s,void *arg) {
 }
 int main(int argc,char **argv) {
  if(argc!=11){fprintf(stderr,"usage: arq Ws Wr pd pa Tout seed duration warmup N trace\n");return 2;}
- Model m={0}; m.ws=atoi(argv[1]);m.wr=atoi(argv[2]);m.pd=atof(argv[3]);m.pa=atof(argv[4]);m.tout=atof(argv[5]);
+ Model m={0};
+ m.legacy=getenv("ARQ_LEGACY")!=NULL;
+ m.individual=getenv("ARQ_INDIVIDUAL")!=NULL;
+ m.cumulative_only=getenv("ARQ_CUMULATIVE_ONLY")!=NULL;
+ m.ws=atoi(argv[1]);m.wr=atoi(argv[2]);m.pd=atof(argv[3]);m.pa=atof(argv[4]);m.tout=atof(argv[5]);
  m.rd=strtoull(argv[6],0,10);m.ra=m.rd^UINT64_C(0xd1b54a32d192ed03);
  m.end=atof(argv[7]);m.warm=atof(argv[8]);m.n=atoi(argv[9]);m.trace=atoi(argv[10]);
  if(m.ws<1||m.wr<1||m.pd<0||m.pd>=1||m.pa<0||m.pa>=1||m.tout<=0||m.end<=m.warm||m.warm<0||m.n<0)return 2;

@@ -22,8 +22,8 @@
    12.000 ACK cumulative      id=-1 sendbase=0 next=12 recvbase=0
    13.000 DATA lost           id=7 sendbase=0 next=12 recvbase=0
    14.000 DATA lost           id=8 sendbase=0 next=12 recvbase=0
+   15.000 TIMEOUT per-frame   id=0 sendbase=0 next=12 recvbase=0
    15.000 DATA lost           id=9 sendbase=0 next=12 recvbase=0
-   15.000 TIMEOUT go-back     id=0 sendbase=0 next=12 recvbase=0
    15.000 TX retry            id=0 sendbase=0 next=12 recvbase=0
    16.000 DATA outside window id=10 sendbase=0 next=12 recvbase=0
    16.000 ACK lost            id=10 sendbase=0 next=12 recvbase=0
@@ -49,8 +49,8 @@
    27.000 DATA lost           id=6 sendbase=0 next=12 recvbase=0
    28.000 DATA lost           id=7 sendbase=0 next=12 recvbase=0
    29.000 DATA lost           id=8 sendbase=0 next=12 recvbase=0
+   30.000 TIMEOUT per-frame   id=0 sendbase=0 next=12 recvbase=0
    30.000 DATA lost           id=9 sendbase=0 next=12 recvbase=0
-   30.000 TIMEOUT go-back     id=0 sendbase=0 next=12 recvbase=0
    30.000 TX retry            id=0 sendbase=0 next=12 recvbase=0
    31.000 DATA outside window id=10 sendbase=0 next=12 recvbase=0
    31.000 ACK lost            id=10 sendbase=0 next=12 recvbase=0
@@ -62,9 +62,9 @@
    35.000 TX retry            id=5 sendbase=0 next=12 recvbase=0
    36.000 DATA lost           id=0 sendbase=0 next=12 recvbase=0
    36.000 TX retry            id=6 sendbase=0 next=12 recvbase=0
-   37.000 ACK cumulative      id=-1 sendbase=0 next=12 recvbase=0
    37.000 DATA outside window id=1 sendbase=0 next=12 recvbase=0
    37.000 ACK lost            id=1 sendbase=0 next=12 recvbase=0
+   37.000 ACK cumulative      id=-1 sendbase=0 next=12 recvbase=0
    37.000 TX retry            id=7 sendbase=0 next=12 recvbase=0
    38.000 DATA outside window id=2 sendbase=0 next=12 recvbase=0
    38.000 TX retry            id=8 sendbase=0 next=12 recvbase=0
@@ -79,8 +79,8 @@
    43.000 ACK cumulative      id=-1 sendbase=0 next=12 recvbase=0
    44.000 DATA lost           id=8 sendbase=0 next=12 recvbase=0
    44.000 ACK cumulative      id=-1 sendbase=0 next=12 recvbase=0
+   45.000 TIMEOUT per-frame   id=0 sendbase=0 next=12 recvbase=0
    45.000 DATA outside window id=9 sendbase=0 next=12 recvbase=0
-   45.000 TIMEOUT go-back     id=0 sendbase=0 next=12 recvbase=0
    45.000 TX retry            id=0 sendbase=0 next=12 recvbase=0
    46.000 DATA lost           id=10 sendbase=0 next=12 recvbase=0
    46.000 TX retry            id=1 sendbase=0 next=12 recvbase=0
@@ -108,8 +108,8 @@
    57.000 DATA lost           id=6 sendbase=0 next=12 recvbase=0
    58.000 DATA outside window id=7 sendbase=0 next=12 recvbase=0
    59.000 DATA lost           id=8 sendbase=0 next=12 recvbase=0
+   60.000 TIMEOUT per-frame   id=0 sendbase=0 next=12 recvbase=0
    60.000 DATA lost           id=9 sendbase=0 next=12 recvbase=0
-   60.000 TIMEOUT go-back     id=0 sendbase=0 next=12 recvbase=0
    60.000 TX retry            id=0 sendbase=0 next=12 recvbase=0
    61.000 DATA lost           id=10 sendbase=0 next=12 recvbase=0
    61.000 TX retry            id=1 sendbase=0 next=12 recvbase=0
@@ -143,118 +143,118 @@
    75.000 DATA lost           id=9 sendbase=2 next=12 recvbase=2
    75.000 ACK cumulative      id=1 sendbase=2 next=12 recvbase=2
    76.000 DATA lost           id=10 sendbase=2 next=12 recvbase=2
+   77.000 TIMEOUT per-frame   id=2 sendbase=2 next=12 recvbase=2
    77.000 DATA outside window id=11 sendbase=2 next=12 recvbase=2
    77.000 ACK lost            id=11 sendbase=2 next=12 recvbase=2
-   87.000 TIMEOUT go-back     id=2 sendbase=2 next=12 recvbase=2
-   87.000 TX retry            id=2 sendbase=2 next=12 recvbase=2
-   88.000 TX retry            id=3 sendbase=2 next=12 recvbase=2
-   89.000 TX retry            id=4 sendbase=2 next=12 recvbase=2
-   90.000 TX retry            id=5 sendbase=2 next=12 recvbase=2
-   91.000 TX retry            id=6 sendbase=2 next=12 recvbase=2
-   92.000 TX retry            id=7 sendbase=2 next=12 recvbase=2
-   93.000 DATA accepted       id=2 sendbase=2 next=12 recvbase=2
-   93.000 ACK lost            id=2 sendbase=2 next=12 recvbase=3
-   93.000 TX retry            id=8 sendbase=2 next=12 recvbase=3
-   94.000 DATA accepted       id=3 sendbase=2 next=12 recvbase=3
-   94.000 ACK lost            id=3 sendbase=2 next=12 recvbase=4
-   94.000 TX retry            id=9 sendbase=2 next=12 recvbase=4
-   95.000 DATA accepted       id=4 sendbase=2 next=12 recvbase=4
-   95.000 TX retry            id=10 sendbase=2 next=12 recvbase=5
-   96.000 DATA lost           id=5 sendbase=2 next=12 recvbase=5
-   96.000 TX retry            id=11 sendbase=2 next=12 recvbase=5
-   97.000 DATA outside window id=6 sendbase=2 next=12 recvbase=5
-   97.000 ACK lost            id=6 sendbase=2 next=12 recvbase=5
-   98.000 DATA outside window id=7 sendbase=2 next=12 recvbase=5
-   99.000 DATA outside window id=8 sendbase=2 next=12 recvbase=5
-  100.000 DATA outside window id=9 sendbase=2 next=12 recvbase=5
-  100.000 ACK cumulative      id=4 sendbase=2 next=12 recvbase=5
-  101.000 DATA outside window id=10 sendbase=5 next=12 recvbase=5
-  101.000 ACK lost            id=10 sendbase=5 next=12 recvbase=5
-  102.000 DATA outside window id=11 sendbase=5 next=12 recvbase=5
-  102.000 ACK lost            id=11 sendbase=5 next=12 recvbase=5
-  103.000 ACK cumulative      id=4 sendbase=5 next=12 recvbase=5
-  104.000 ACK cumulative      id=4 sendbase=5 next=12 recvbase=5
-  105.000 ACK cumulative      id=4 sendbase=5 next=12 recvbase=5
-  115.000 TIMEOUT go-back     id=5 sendbase=5 next=12 recvbase=5
-  115.000 TX retry            id=5 sendbase=5 next=12 recvbase=5
-  116.000 TX retry            id=6 sendbase=5 next=12 recvbase=5
-  117.000 TX retry            id=7 sendbase=5 next=12 recvbase=5
-  118.000 TX retry            id=8 sendbase=5 next=12 recvbase=5
-  119.000 TX retry            id=9 sendbase=5 next=12 recvbase=5
-  120.000 TX retry            id=10 sendbase=5 next=12 recvbase=5
-  121.000 DATA accepted       id=5 sendbase=5 next=12 recvbase=5
-  121.000 ACK lost            id=5 sendbase=5 next=12 recvbase=6
-  121.000 TX retry            id=11 sendbase=5 next=12 recvbase=6
-  122.000 DATA lost           id=6 sendbase=5 next=12 recvbase=6
-  123.000 DATA lost           id=7 sendbase=5 next=12 recvbase=6
-  124.000 DATA outside window id=8 sendbase=5 next=12 recvbase=6
-  125.000 DATA lost           id=9 sendbase=5 next=12 recvbase=6
-  126.000 DATA outside window id=10 sendbase=5 next=12 recvbase=6
-  127.000 DATA lost           id=11 sendbase=5 next=12 recvbase=6
-  129.000 ACK cumulative      id=5 sendbase=5 next=12 recvbase=6
-  131.000 ACK cumulative      id=5 sendbase=6 next=12 recvbase=6
-  144.000 TIMEOUT go-back     id=6 sendbase=6 next=12 recvbase=6
-  144.000 TX retry            id=6 sendbase=6 next=12 recvbase=6
-  145.000 TX retry            id=7 sendbase=6 next=12 recvbase=6
-  146.000 TX retry            id=8 sendbase=6 next=12 recvbase=6
-  147.000 TX retry            id=9 sendbase=6 next=12 recvbase=6
-  148.000 TX retry            id=10 sendbase=6 next=12 recvbase=6
-  149.000 TX retry            id=11 sendbase=6 next=12 recvbase=6
-  150.000 DATA lost           id=6 sendbase=6 next=12 recvbase=6
-  151.000 DATA lost           id=7 sendbase=6 next=12 recvbase=6
-  152.000 DATA outside window id=8 sendbase=6 next=12 recvbase=6
-  152.000 ACK lost            id=8 sendbase=6 next=12 recvbase=6
-  153.000 DATA outside window id=9 sendbase=6 next=12 recvbase=6
-  154.000 DATA outside window id=10 sendbase=6 next=12 recvbase=6
-  155.000 DATA outside window id=11 sendbase=6 next=12 recvbase=6
-  155.000 ACK lost            id=11 sendbase=6 next=12 recvbase=6
-  158.000 ACK cumulative      id=5 sendbase=6 next=12 recvbase=6
-  159.000 ACK cumulative      id=5 sendbase=6 next=12 recvbase=6
-  159.000 TIMEOUT go-back     id=6 sendbase=6 next=12 recvbase=6
-  159.000 TX retry            id=6 sendbase=6 next=12 recvbase=6
-  160.000 TX retry            id=7 sendbase=6 next=12 recvbase=6
-  161.000 TX retry            id=8 sendbase=6 next=12 recvbase=6
-  162.000 TX retry            id=9 sendbase=6 next=12 recvbase=6
-  163.000 TX retry            id=10 sendbase=6 next=12 recvbase=6
-  164.000 TX retry            id=11 sendbase=6 next=12 recvbase=6
-  165.000 DATA accepted       id=6 sendbase=6 next=12 recvbase=6
-  166.000 DATA accepted       id=7 sendbase=6 next=12 recvbase=7
-  166.000 ACK lost            id=7 sendbase=6 next=12 recvbase=8
-  167.000 DATA accepted       id=8 sendbase=6 next=12 recvbase=8
-  167.000 ACK lost            id=8 sendbase=6 next=12 recvbase=9
-  168.000 DATA lost           id=9 sendbase=6 next=12 recvbase=9
-  169.000 DATA lost           id=10 sendbase=6 next=12 recvbase=9
-  170.000 DATA outside window id=11 sendbase=6 next=12 recvbase=9
-  170.000 ACK cumulative      id=6 sendbase=6 next=12 recvbase=9
-  175.000 ACK cumulative      id=8 sendbase=7 next=12 recvbase=9
-  190.000 TIMEOUT go-back     id=9 sendbase=9 next=12 recvbase=9
-  190.000 TX retry            id=9 sendbase=9 next=12 recvbase=9
-  191.000 TX retry            id=10 sendbase=9 next=12 recvbase=9
-  192.000 TX retry            id=11 sendbase=9 next=12 recvbase=9
-  196.000 DATA accepted       id=9 sendbase=9 next=12 recvbase=9
-  196.000 ACK lost            id=9 sendbase=9 next=12 recvbase=10
-  197.000 DATA accepted       id=10 sendbase=9 next=12 recvbase=10
-  197.000 ACK lost            id=10 sendbase=9 next=12 recvbase=11
-  198.000 DATA lost           id=11 sendbase=9 next=12 recvbase=11
-  205.000 TIMEOUT go-back     id=9 sendbase=9 next=12 recvbase=11
-  205.000 TX retry            id=9 sendbase=9 next=12 recvbase=11
-  206.000 TX retry            id=10 sendbase=9 next=12 recvbase=11
-  207.000 TX retry            id=11 sendbase=9 next=12 recvbase=11
-  211.000 DATA lost           id=9 sendbase=9 next=12 recvbase=11
-  212.000 DATA duplicate      id=10 sendbase=9 next=12 recvbase=11
-  213.000 DATA accepted       id=11 sendbase=9 next=12 recvbase=11
-  213.000 ACK lost            id=11 sendbase=9 next=12 recvbase=12
-  217.000 ACK cumulative      id=10 sendbase=9 next=12 recvbase=12
-  232.000 TIMEOUT go-back     id=11 sendbase=11 next=12 recvbase=12
-  232.000 TX retry            id=11 sendbase=11 next=12 recvbase=12
-  238.000 DATA duplicate      id=11 sendbase=11 next=12 recvbase=12
-  238.000 ACK lost            id=11 sendbase=11 next=12 recvbase=12
-  247.000 TIMEOUT go-back     id=11 sendbase=11 next=12 recvbase=12
-  247.000 TX retry            id=11 sendbase=11 next=12 recvbase=12
-  253.000 DATA duplicate      id=11 sendbase=11 next=12 recvbase=12
-  253.000 ACK lost            id=11 sendbase=11 next=12 recvbase=12
-  262.000 TIMEOUT go-back     id=11 sendbase=11 next=12 recvbase=12
-  262.000 TX retry            id=11 sendbase=11 next=12 recvbase=12
-  268.000 DATA duplicate      id=11 sendbase=11 next=12 recvbase=12
-  273.000 ACK cumulative      id=11 sendbase=11 next=12 recvbase=12
-RESULT,0.0439560439351,8.16666666667,273.00000013,98,12
+   77.000 TX retry            id=2 sendbase=2 next=12 recvbase=2
+   78.000 TX retry            id=3 sendbase=2 next=12 recvbase=2
+   79.000 TX retry            id=4 sendbase=2 next=12 recvbase=2
+   80.000 TX retry            id=5 sendbase=2 next=12 recvbase=2
+   81.000 TX retry            id=6 sendbase=2 next=12 recvbase=2
+   82.000 TX retry            id=7 sendbase=2 next=12 recvbase=2
+   83.000 DATA accepted       id=2 sendbase=2 next=12 recvbase=2
+   83.000 ACK lost            id=2 sendbase=2 next=12 recvbase=3
+   83.000 TX retry            id=8 sendbase=2 next=12 recvbase=3
+   84.000 DATA accepted       id=3 sendbase=2 next=12 recvbase=3
+   84.000 ACK lost            id=3 sendbase=2 next=12 recvbase=4
+   84.000 TX retry            id=9 sendbase=2 next=12 recvbase=4
+   85.000 DATA accepted       id=4 sendbase=2 next=12 recvbase=4
+   85.000 TX retry            id=10 sendbase=2 next=12 recvbase=5
+   86.000 DATA lost           id=5 sendbase=2 next=12 recvbase=5
+   86.000 TX retry            id=11 sendbase=2 next=12 recvbase=5
+   87.000 DATA outside window id=6 sendbase=2 next=12 recvbase=5
+   87.000 ACK lost            id=6 sendbase=2 next=12 recvbase=5
+   88.000 DATA outside window id=7 sendbase=2 next=12 recvbase=5
+   89.000 DATA outside window id=8 sendbase=2 next=12 recvbase=5
+   90.000 DATA outside window id=9 sendbase=2 next=12 recvbase=5
+   90.000 ACK cumulative      id=4 sendbase=2 next=12 recvbase=5
+   91.000 DATA outside window id=10 sendbase=5 next=12 recvbase=5
+   91.000 ACK lost            id=10 sendbase=5 next=12 recvbase=5
+   92.000 DATA outside window id=11 sendbase=5 next=12 recvbase=5
+   92.000 ACK lost            id=11 sendbase=5 next=12 recvbase=5
+   93.000 ACK cumulative      id=4 sendbase=5 next=12 recvbase=5
+   94.000 ACK cumulative      id=4 sendbase=5 next=12 recvbase=5
+   95.000 ACK cumulative      id=4 sendbase=5 next=12 recvbase=5
+   95.000 TIMEOUT per-frame   id=5 sendbase=5 next=12 recvbase=5
+   95.000 TX retry            id=5 sendbase=5 next=12 recvbase=5
+   96.000 TX retry            id=6 sendbase=5 next=12 recvbase=5
+   97.000 TX retry            id=7 sendbase=5 next=12 recvbase=5
+   98.000 TX retry            id=8 sendbase=5 next=12 recvbase=5
+   99.000 TX retry            id=9 sendbase=5 next=12 recvbase=5
+  100.000 TX retry            id=10 sendbase=5 next=12 recvbase=5
+  101.000 DATA accepted       id=5 sendbase=5 next=12 recvbase=5
+  101.000 ACK lost            id=5 sendbase=5 next=12 recvbase=6
+  101.000 TX retry            id=11 sendbase=5 next=12 recvbase=6
+  102.000 DATA lost           id=6 sendbase=5 next=12 recvbase=6
+  103.000 DATA lost           id=7 sendbase=5 next=12 recvbase=6
+  104.000 DATA outside window id=8 sendbase=5 next=12 recvbase=6
+  105.000 DATA lost           id=9 sendbase=5 next=12 recvbase=6
+  106.000 DATA outside window id=10 sendbase=5 next=12 recvbase=6
+  107.000 DATA lost           id=11 sendbase=5 next=12 recvbase=6
+  109.000 ACK cumulative      id=5 sendbase=5 next=12 recvbase=6
+  111.000 ACK cumulative      id=5 sendbase=6 next=12 recvbase=6
+  111.000 TIMEOUT per-frame   id=6 sendbase=6 next=12 recvbase=6
+  111.000 TX retry            id=6 sendbase=6 next=12 recvbase=6
+  112.000 TX retry            id=7 sendbase=6 next=12 recvbase=6
+  113.000 TX retry            id=8 sendbase=6 next=12 recvbase=6
+  114.000 TX retry            id=9 sendbase=6 next=12 recvbase=6
+  115.000 TX retry            id=10 sendbase=6 next=12 recvbase=6
+  116.000 TX retry            id=11 sendbase=6 next=12 recvbase=6
+  117.000 DATA lost           id=6 sendbase=6 next=12 recvbase=6
+  118.000 DATA lost           id=7 sendbase=6 next=12 recvbase=6
+  119.000 DATA outside window id=8 sendbase=6 next=12 recvbase=6
+  119.000 ACK lost            id=8 sendbase=6 next=12 recvbase=6
+  120.000 DATA outside window id=9 sendbase=6 next=12 recvbase=6
+  121.000 DATA outside window id=10 sendbase=6 next=12 recvbase=6
+  122.000 DATA outside window id=11 sendbase=6 next=12 recvbase=6
+  122.000 ACK lost            id=11 sendbase=6 next=12 recvbase=6
+  125.000 ACK cumulative      id=5 sendbase=6 next=12 recvbase=6
+  126.000 ACK cumulative      id=5 sendbase=6 next=12 recvbase=6
+  126.000 TIMEOUT per-frame   id=6 sendbase=6 next=12 recvbase=6
+  126.000 TX retry            id=6 sendbase=6 next=12 recvbase=6
+  127.000 TX retry            id=7 sendbase=6 next=12 recvbase=6
+  128.000 TX retry            id=8 sendbase=6 next=12 recvbase=6
+  129.000 TX retry            id=9 sendbase=6 next=12 recvbase=6
+  130.000 TX retry            id=10 sendbase=6 next=12 recvbase=6
+  131.000 TX retry            id=11 sendbase=6 next=12 recvbase=6
+  132.000 DATA accepted       id=6 sendbase=6 next=12 recvbase=6
+  133.000 DATA accepted       id=7 sendbase=6 next=12 recvbase=7
+  133.000 ACK lost            id=7 sendbase=6 next=12 recvbase=8
+  134.000 DATA accepted       id=8 sendbase=6 next=12 recvbase=8
+  134.000 ACK lost            id=8 sendbase=6 next=12 recvbase=9
+  135.000 DATA lost           id=9 sendbase=6 next=12 recvbase=9
+  136.000 DATA lost           id=10 sendbase=6 next=12 recvbase=9
+  137.000 DATA outside window id=11 sendbase=6 next=12 recvbase=9
+  137.000 ACK cumulative      id=6 sendbase=6 next=12 recvbase=9
+  142.000 ACK cumulative      id=8 sendbase=7 next=12 recvbase=9
+  144.000 TIMEOUT per-frame   id=9 sendbase=9 next=12 recvbase=9
+  144.000 TX retry            id=9 sendbase=9 next=12 recvbase=9
+  145.000 TX retry            id=10 sendbase=9 next=12 recvbase=9
+  146.000 TX retry            id=11 sendbase=9 next=12 recvbase=9
+  150.000 DATA accepted       id=9 sendbase=9 next=12 recvbase=9
+  150.000 ACK lost            id=9 sendbase=9 next=12 recvbase=10
+  151.000 DATA accepted       id=10 sendbase=9 next=12 recvbase=10
+  151.000 ACK lost            id=10 sendbase=9 next=12 recvbase=11
+  152.000 DATA lost           id=11 sendbase=9 next=12 recvbase=11
+  159.000 TIMEOUT per-frame   id=9 sendbase=9 next=12 recvbase=11
+  159.000 TX retry            id=9 sendbase=9 next=12 recvbase=11
+  160.000 TX retry            id=10 sendbase=9 next=12 recvbase=11
+  161.000 TX retry            id=11 sendbase=9 next=12 recvbase=11
+  165.000 DATA lost           id=9 sendbase=9 next=12 recvbase=11
+  166.000 DATA duplicate      id=10 sendbase=9 next=12 recvbase=11
+  167.000 DATA accepted       id=11 sendbase=9 next=12 recvbase=11
+  167.000 ACK lost            id=11 sendbase=9 next=12 recvbase=12
+  171.000 ACK cumulative      id=10 sendbase=9 next=12 recvbase=12
+  176.000 TIMEOUT per-frame   id=11 sendbase=11 next=12 recvbase=12
+  176.000 TX retry            id=11 sendbase=11 next=12 recvbase=12
+  182.000 DATA duplicate      id=11 sendbase=11 next=12 recvbase=12
+  182.000 ACK lost            id=11 sendbase=11 next=12 recvbase=12
+  191.000 TIMEOUT per-frame   id=11 sendbase=11 next=12 recvbase=12
+  191.000 TX retry            id=11 sendbase=11 next=12 recvbase=12
+  197.000 DATA duplicate      id=11 sendbase=11 next=12 recvbase=12
+  197.000 ACK lost            id=11 sendbase=11 next=12 recvbase=12
+  206.000 TIMEOUT per-frame   id=11 sendbase=11 next=12 recvbase=12
+  206.000 TX retry            id=11 sendbase=11 next=12 recvbase=12
+  212.000 DATA duplicate      id=11 sendbase=11 next=12 recvbase=12
+  217.000 ACK cumulative      id=11 sendbase=11 next=12 recvbase=12
+RESULT,0.0552995391705,8.16666666667,217,98,12

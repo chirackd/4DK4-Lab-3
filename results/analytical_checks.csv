@@ -1,0 +1,14 @@
+check,observed,expected,tolerance
+Analytical packet-error reference Ws=64 Wr=1 T=15,0.3754206,0.37499999999999994,0.003
+Analytical packet-error reference Ws=11 Wr=1 T=11,0.4499968,0.45,0.0030671842345664745
+Analytical packet-error reference Ws=64 Wr=64 T=15,0.8999504,0.9,0.003
+SW renewal T=11,0.073671,0.07363636363636364,0.0005
+SW renewal T=11.01,0.0736588,0.07362364682463939,0.0005
+SW renewal T=11.5,0.07304400000000001,0.0730058584948175,0.0005
+SW renewal T=12,0.0724304,0.07238605898123325,0.0005
+ACK wins exact timeout tie Ws=1 Wr=1,100.0,100.0,0.0
+Exact finite time at T=11 Ws=1 Wr=1,1100.0,1100.0,1e-08
+ACK wins exact timeout tie Ws=11 Wr=1,100.0,100.0,0.0
+Exact finite time at T=11 Ws=11 Wr=1,110.0,110.0,1e-08
+ACK wins exact timeout tie Ws=11 Wr=16,100.0,100.0,0.0
+Exact finite time at T=11 Ws=11 Wr=16,110.0,110.0,1e-08
