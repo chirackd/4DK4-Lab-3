@@ -1,6 +1,6 @@
-.venv/
-build/
-output/
+arq
+arq.exe
+arq_sanitize
 __pycache__/
-*.pyc
-output-*/
+.mplcache/
+*.log
