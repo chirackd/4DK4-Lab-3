@@ -1,0 +1,87 @@
+[
+  {
+    "exp": "2",
+    "metric": "efficiency",
+    "file": "exp2_efficiency.png"
+  },
+  {
+    "exp": "3a",
+    "metric": "efficiency",
+    "file": "exp3a_efficiency.png"
+  },
+  {
+    "exp": "3b",
+    "metric": "efficiency",
+    "file": "exp3b_efficiency.png"
+  },
+  {
+    "exp": "3b",
+    "metric": "attempts_per_delivery",
+    "file": "exp3b_attempts_per_delivery.png"
+  },
+  {
+    "exp": "4",
+    "metric": "efficiency",
+    "file": "exp4_efficiency.png"
+  },
+  {
+    "exp": "4",
+    "metric": "attempts_per_delivery",
+    "file": "exp4_attempts_per_delivery.png"
+  },
+  {
+    "exp": "5",
+    "metric": "efficiency",
+    "file": "exp5_efficiency.png"
+  },
+  {
+    "exp": "5",
+    "metric": "attempts_per_delivery",
+    "file": "exp5_attempts_per_delivery.png"
+  },
+  {
+    "exp": "6_pd0_pa0",
+    "metric": "completion_ms",
+    "file": "exp6_pd0_pa0_completion_ms.png"
+  },
+  {
+    "exp": "6_pd0.05_pa0",
+    "metric": "completion_ms",
+    "file": "exp6_pd0.05_pa0_completion_ms.png"
+  },
+  {
+    "exp": "6_pd0.05_pa0.05",
+    "metric": "completion_ms",
+    "file": "exp6_pd0.05_pa0.05_completion_ms.png"
+  },
+  {
+    "exp": "7_N10_pd0_pa0",
+    "metric": "completion_ms",
+    "file": "exp7_N10_pd0_pa0_completion_ms.png"
+  },
+  {
+    "exp": "7_N10_pd0.05_pa0",
+    "metric": "completion_ms",
+    "file": "exp7_N10_pd0.05_pa0_completion_ms.png"
+  },
+  {
+    "exp": "7_N10_pd0.05_pa0.05",
+    "metric": "completion_ms",
+    "file": "exp7_N10_pd0.05_pa0.05_completion_ms.png"
+  },
+  {
+    "exp": "7_N1000_pd0_pa0",
+    "metric": "completion_ms",
+    "file": "exp7_N1000_pd0_pa0_completion_ms.png"
+  },
+  {
+    "exp": "7_N1000_pd0.05_pa0",
+    "metric": "completion_ms",
+    "file": "exp7_N1000_pd0.05_pa0_completion_ms.png"
+  },
+  {
+    "exp": "7_N1000_pd0.05_pa0.05",
+    "metric": "completion_ms",
+    "file": "exp7_N1000_pd0.05_pa0.05_completion_ms.png"
+  }
+]
